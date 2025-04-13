@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">SnekStorep</string>
+    <string name="first_slide">Encuentra tus zapatos ideales</string>
+    <string name="second_slide">Envío rápido y seguro</string>
+    <string name="third_slide">La mejor calidad y atención</string>
+    <string name="description">Descubre las últimas tendencias en calzado con estilo y comodidad</string>
+
+
 </resources>
