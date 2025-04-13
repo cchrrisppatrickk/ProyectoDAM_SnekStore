@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "468765181306",
+    "project_id": "snekstorep",
+    "storage_bucket": "snekstorep.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468765181306:android:36901c6d311149d94582c3",
+        "android_client_info": {
+          "package_name": "com.example.snekstorep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwGafmrPryXLsFlgGjDIJJpir52mAe3oc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
