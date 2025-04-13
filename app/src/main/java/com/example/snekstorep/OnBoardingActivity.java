@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -65,6 +66,7 @@ public class OnBoardingActivity extends AppCompatActivity {
         //llAMAR AL ADAPTER
         sliderAdapter = new SliderAdapter(this);
         viewPager.setAdapter(sliderAdapter);
+
     }
 
     private void addDots(int position){
@@ -72,16 +74,15 @@ public class OnBoardingActivity extends AppCompatActivity {
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setText(Html.fromHtml("&#8226;", Html.FROM_HTML_MODE_LEGACY));
             dots[i].setTextSize(35);
             dotsLayout.addView(dots[i]);
         }
 
         if (dots.length > 0) {
-            dots[position].setTextColor(getResources().getColor(R.color.pink));
+            dots[position].setTextColor(ContextCompat.getColor(this, R.color.pink));
         }
     }
-
     ViewPager.OnPageChangeListener changeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
