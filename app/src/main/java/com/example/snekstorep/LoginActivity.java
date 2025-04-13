@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
 
-    public void singUp(View view) {
+    public void signUp(View view) {
         startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
     }
 }
