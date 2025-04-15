@@ -10,13 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.snekstorep.Adapters.CategoryAdapter;
+import com.example.snekstorep.Adapters.NewProductsAdapter;
 import com.example.snekstorep.R;
 import com.example.snekstorep.models.CategoryModel;
+import com.example.snekstorep.models.NewProductsModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,10 +32,17 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
 
-    RecyclerView catRecyclerview;
+    RecyclerView catRecyclerview, newProductRecyclerview;
 
+    //Category
     CategoryAdapter categoryAdapter;
     List<CategoryModel> categoryModelList;
+
+    //new producto
+    NewProductsAdapter newProductsAdapter;
+    List<NewProductsModel> newProductsModelList;
+
+
 
     FirebaseFirestore db;
 
@@ -46,6 +56,8 @@ public class HomeFragment extends Fragment {
         // Inflar el diseño para este fragmento
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         catRecyclerview = root.findViewById(R.id.rec_category);
+        newProductRecyclerview = root.findViewById(R.id.new_product_rec);
+
 
         db = FirebaseFirestore.getInstance();
 
@@ -79,11 +91,34 @@ public class HomeFragment extends Fragment {
                                 categoryAdapter.notifyDataSetChanged();
                             }
                         } else {
-                            // Handle the error
+                            Toast.makeText(getActivity(), ""+ task.getException(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
+        // new products
+        newProductRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        newProductsModelList = new ArrayList<>();
+        newProductsAdapter = new NewProductsAdapter(getContext(),newProductsModelList);
+        newProductRecyclerview.setAdapter(newProductsAdapter);
+
+        db.collection("NewProducts")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                NewProductsModel newProductsModel = document.toObject(NewProductsModel.class);
+                                newProductsModelList.add(newProductsModel);
+                                newProductsAdapter.notifyDataSetChanged();
+                            }
+                        } else {
+
+                            Toast.makeText(getActivity(), ""+ task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
         return root;
