@@ -45,4 +45,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+
+    //sliderImage
+    implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
 }

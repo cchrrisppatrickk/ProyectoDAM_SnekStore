@@ -1,4 +1,4 @@
-package com.example.snekstorep;
+package com.example.snekstorep.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,13 +14,10 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.snekstorep.Adapters.SliderAdapter;
+import com.example.snekstorep.R;
 
 public class OnBoardingActivity extends AppCompatActivity {
 
