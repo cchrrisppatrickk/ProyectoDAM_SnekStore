@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -49,4 +50,5 @@ dependencies {
 
     //sliderImage
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
 }
