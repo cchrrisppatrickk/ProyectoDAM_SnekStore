@@ -3,83 +3,100 @@ package com.example.snekstorep.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
+import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.snekstorep.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-
-    EditText email,password;
+    private EditText etEmail, etPassword;
+    private Button btnLogin;
+    private TextView tvRegister;
     private FirebaseAuth auth;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        // >>> SOLO PARA PRUEBAS - FORZAR LOGOUT AL INICIAR <<<
+        FirebaseAuth.getInstance().signOut();
+        Log.d("DEBUG_AUTH", "Sesión cerrada forzadamente para pruebas");
+        // >>> ELIMINAR ESTO EN PRODUCCIÓN <<<
 
         auth = FirebaseAuth.getInstance();
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
 
+        // Verificar si el usuario ya está autenticado
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            Log.d("DEBUG_AUTH", "Usuario ya autenticado: " + currentUser.getEmail());
+            goToMainActivity();
+            return;
+        } else {
+            Log.d("DEBUG_AUTH", "No hay usuario autenticado");
+        }
 
+        // Inicializar vistas
+        etEmail = findViewById(R.id.etUsuario);
+        etPassword = findViewById(R.id.etPassword);
+        btnLogin = findViewById(R.id.btnIngresar);
+        tvRegister = findViewById(R.id.Lblregistrar);
+
+        // Configurar listeners
+        btnLogin.setOnClickListener(v -> signIn());
+        tvRegister.setOnClickListener(v -> signUp());
     }
 
-    public void signIn(View view) {
-
-        String userEmail = email.getText().toString();
-        String userPassword = password.getText().toString();
-
+    private void signIn() {
+        String userEmail = etEmail.getText().toString().trim();
+        String userPassword = etPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(userEmail)) {
-            Toast.makeText(this, "¡Ingresa una dirección de correo!", Toast.LENGTH_SHORT).show();
+            etEmail.setError("Ingresa un correo electrónico");
             return;
         }
 
         if (TextUtils.isEmpty(userPassword)) {
-            Toast.makeText(this, "¡Ingresa una contraseña!", Toast.LENGTH_SHORT).show();
-        }
-        if (userPassword.length() < 6) {
-            Toast.makeText(this, "¡Contraseña muy corta, ingresa mínimo 6 caracteres!", Toast.LENGTH_SHORT).show();
+            etPassword.setError("Ingresa una contraseña");
             return;
         }
 
-        auth.signInWithEmailAndPassword(userEmail, userPassword)
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+        if (userPassword.length() < 6) {
+            etPassword.setError("La contraseña debe tener al menos 6 caracteres");
+            return;
+        }
 
-                            Toast.makeText(LoginActivity.this, "Login Successfull", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Error"+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
+        btnLogin.setEnabled(false);
+
+        auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener(this, task -> {
+                    btnLogin.setEnabled(true);
+
+                    if (task.isSuccessful()) {
+                        Log.d("DEBUG_AUTH", "Inicio de sesión exitoso");
+                        Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
+                        goToMainActivity();
+                    } else {
+                        Log.e("DEBUG_AUTH", "Error en login", task.getException());
+                        Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    public void signUp(View view) {
-        startActivity(new Intent(LoginActivity.this, RegistrationActivity.class));
+    private void signUp() {
+        startActivity(new Intent(this, RegistrationActivity.class));
+    }
+
+    private void goToMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }
