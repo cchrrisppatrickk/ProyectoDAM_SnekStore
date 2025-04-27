@@ -51,4 +51,6 @@ dependencies {
     //sliderImage
     implementation("com.github.denzcoskun:ImageSlideshow:0.1.2")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
+    //blur
+    implementation ("com.github.Dimezis:BlurView:version-2.0.6")
 }

@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="24dp"
+            android:background="@color/light_navy_blue">
 
             <TextView
                 android:id="@+id/textView"
