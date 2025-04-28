@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="16dp"
-                    app:srcCompat="@drawable/btn_2" />
+                    app:srcCompat="@drawable/fav_icon" />
             </RelativeLayout>
 
             <!-- Image slider -->
@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/amor" />
+                    app:srcCompat="@drawable/star" />
 
                 <TextView
                     android:id="@+id/ratingTxt"
