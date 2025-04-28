@@ -22,7 +22,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     private Context context;
     private List<CategoryModel> list;
-    private int selectedPosition = -1; // Para controlar el ítem seleccionado
+    private int selectedPosition = -1;
 
     public CategoryAdapter(Context context, List<CategoryModel> list) {
         this.context = context;
@@ -50,17 +50,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         // Manejar selección
         if (selectedPosition == position) {
-            // Ítem seleccionado
-            holder.binding.catImg.setBackgroundResource(R.drawable.purple_bg);
+            // Ítem seleccionado - mostrar nombre y cambiar estilo
+            holder.binding.getRoot().setBackgroundResource(R.drawable.purple_bg);
             ImageViewCompat.setImageTintList(
                     holder.binding.catImg,
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white))
             );
             holder.binding.catName.setVisibility(View.VISIBLE);
-            holder.binding.catName.setTextColor(ContextCompat.getColor(context, R.color.black));
+            holder.binding.catName.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
-            // Ítem no seleccionado
-            holder.binding.catImg.setBackgroundResource(R.drawable.grey_bg);
+            // Ítem no seleccionado - ocultar nombre y estilo normal
+            holder.binding.getRoot().setBackgroundResource(R.drawable.grey_bg);
             ImageViewCompat.setImageTintList(
                     holder.binding.catImg,
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.black))
@@ -69,17 +69,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         }
 
         // Evento click
-        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int lastSelectedPosition = selectedPosition;
-                selectedPosition = position;
+        holder.binding.getRoot().setOnClickListener(v -> {
+            int lastSelected = selectedPosition;
+            selectedPosition = position;
 
-                if (lastSelectedPosition != -1) {
-                    notifyItemChanged(lastSelectedPosition);
-                }
-                notifyItemChanged(selectedPosition);
+            // Notificar cambios solo en los items afectados
+            if (lastSelected != -1) {
+                notifyItemChanged(lastSelected);
             }
+            notifyItemChanged(selectedPosition);
         });
     }
 
@@ -95,5 +93,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             super(binding.getRoot());
             this.binding = binding;
         }
+    }
+
+    // Método para obtener la categoría seleccionada
+    public CategoryModel getSelectedCategory() {
+        if (selectedPosition >= 0 && selectedPosition < list.size()) {
+            return list.get(selectedPosition);
+        }
+        return null;
     }
 }
