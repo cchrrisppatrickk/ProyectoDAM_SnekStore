@@ -7,14 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.snekstorep.R;
+import com.example.snekstorep.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     //Chris
 
+    Fragment homeFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +30,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
+        homeFragment = new HomeFragment();
+        loadFragment(homeFragment);
     }
+
+    private void loadFragment(Fragment homeFragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.home_container, homeFragment);
+        transaction.commit();
+    }
+
 
 }

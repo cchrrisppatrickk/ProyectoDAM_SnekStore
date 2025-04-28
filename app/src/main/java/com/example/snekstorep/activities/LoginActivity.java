@@ -28,8 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         // >>> SOLO PARA PRUEBAS - FORZAR LOGOUT AL INICIAR <<<
-        FirebaseAuth.getInstance().signOut();
-        Log.d("DEBUG_AUTH", "Sesión cerrada forzadamente para pruebas");
+        //FirebaseAuth.getInstance().signOut();
+        //Log.d("DEBUG_AUTH", "Sesión cerrada forzadamente para pruebas");
         // >>> ELIMINAR ESTO EN PRODUCCIÓN <<<
 
         auth = FirebaseAuth.getInstance();
