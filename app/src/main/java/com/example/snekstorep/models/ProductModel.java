@@ -1,24 +1,34 @@
 package com.example.snekstorep.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class ProductModel implements Serializable {
 
-
+    String title;
     String description;
-    String name;
     String rating;
     int price;
     String img_url;
 
+    private ArrayList<String> size;
     public ProductModel(){}
 
-    public ProductModel(String description, String name, String rating, int price, String img_url) {
+    public ProductModel(String title, String description, String rating, int price, String img_url, ArrayList<String> size) {
+        this.title = title;
         this.description = description;
-        this.name = name;
         this.rating = rating;
         this.price = price;
         this.img_url = img_url;
+        this.size = size;
+    }
+
+    public ArrayList<String> getSize() {
+        return size;
+    }
+
+    public void setSize(ArrayList<String> size) {
+        this.size = size;
     }
 
     public String getDescription() {
@@ -29,12 +39,12 @@ public class ProductModel implements Serializable {
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getRating() {

@@ -1,194 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.DetailActivity">
+    android:background="@android:color/white"
+    tools:context=".activities.DetailedActivity">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_buttons"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:padding="16dp">
 
-            <!-- Image header section -->
+            <!-- Header con botones de retroceso y favoritos -->
             <RelativeLayout
+                android:id="@+id/header_buttons"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/backBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentStart="true"
                     android:layout_margin="16dp"
+                    android:contentDescription="Back button"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/back" />
 
                 <ImageView
                     android:id="@+id/favBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:layout_margin="16dp"
+                    android:contentDescription="Favorite button"
+                    android:padding="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     app:srcCompat="@drawable/fav_icon" />
             </RelativeLayout>
 
-            <!-- Image slider -->
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/slider"
-                android:layout_width="match_parent"
-                android:layout_height="300dp" />
+            <!-- Imagen principal del producto -->
+            <ImageView
+                android:id="@+id/detailed_img"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_launcher_background"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/header_buttons"/>
 
-            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-                android:id="@+id/dotIndicator"
+            <!-- Nombre y calificación -->
+            <LinearLayout
+                android:id="@+id/name_rating_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailed_img">
+
+                <TextView
+                    android:id="@+id/detailed_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Product Name"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
+
+                <RatingBar
+                    android:id="@+id/my_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.1"
+                    android:isIndicator="true"
+                    style="?android:attr/ratingBarStyleSmall"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/detailed_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="4dp"
-                android:visibility="gone"
-                app:dotsColor="@color/lightGrey"
-                app:dotsCornerRadius="8dp"
-                app:dotsSize="6dp"
-                app:dotsSpacing="2dp"
-                app:dotsWidthFactor="2.5"
-                app:selectedDotColor="@color/purple"
-                tools:visibility="visible" />
-
-            <!-- Color selection -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Available Colors"
-                android:textStyle="bold"
-                android:textSize="14sp"
+                android:text="4.0"
                 android:textColor="@color/black"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"/>
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@id/name_rating_container"
+                app:layout_constraintTop_toBottomOf="@id/name_rating_container"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/colorList"
-                android:layout_width="match_parent"
+            <!-- Descripción del producto -->
+            <TextView
+                android:id="@+id/detailed_desc"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:clipToPadding="false"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
+                android:text="Description text goes here"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailed_rating"/>
 
-            <!-- Title and price -->
+            <!-- Precio y control de cantidad -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/price_container"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailed_desc">
 
                 <TextView
-                    android:id="@+id/titleTxt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Product Title"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="23sp" />
-
-                <TextView
-                    android:id="@+id/priceTxt"
+                    android:id="@+id/price_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$0.00"
-                    android:textSize="22sp"
+                    android:text="Price:"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-
-            <!-- Size selection header -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginHorizontal="16dp"
-                android:orientation="horizontal">
+                    android:fontFamily="@font/amethysta"/>
 
                 <TextView
-                    android:id="@+id/sizeHeaderTxt"
-                    android:layout_width="0dp"
+                    android:id="@+id/detailed_price"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Select Size"
+                    android:text="$19.99"
                     android:textColor="@color/black"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:layout_marginStart="8dp"
+                    android:fontFamily="@font/amethysta"/>
+            </LinearLayout>
+
+            <!-- Cantidad: Agregar / Quitar -->
+            <LinearLayout
+                android:id="@+id/quantity_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="24dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/price_container">
 
                 <ImageView
-                    android:id="@+id/ratingIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    app:srcCompat="@drawable/star" />
+                    android:id="@+id/remove_item"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/iconminus"
+                    android:contentDescription="Remove Item"/>
 
                 <TextView
-                    android:id="@+id/ratingTxt"
+                    android:id="@+id/quantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:text="5.0" />
+                    android:text="1"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_marginHorizontal="12dp"
+                    android:gravity="center"
+                    android:minWidth="30dp"/>
+
+                <ImageView
+                    android:id="@+id/add_item"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/plusicon"
+                    android:contentDescription="Add Item"/>
             </LinearLayout>
 
-            <!-- Size selection list -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/sizeList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
-                android:clipToPadding="false"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp" />
-
-            <!-- Product description -->
-            <TextView
-                android:id="@+id/descriptionTxt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Product description goes here..."
-                android:layout_margin="16dp"
-                android:textSize="14sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="horizontal">
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/addToCartBtn"
-                    style="@style/Widget.AppCompat.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/purple_bg"
-                    android:text="Buy Now"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"/>
-
-                <ImageButton
-                    android:id="@+id/imageButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/grey_bg"
-                    app:srcCompat="@drawable/cart_icon"
-                    app:tint="@color/black"/>
-            </LinearLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <!-- Botones fijos en la parte inferior -->
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/add_to_cart"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Add To Cart"
+            android:backgroundTint="@color/pink"
+            android:textColor="@color/white"
+            android:drawableLeft="@drawable/mycart"
+            android:drawableTint="@color/white"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/buy_now"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Buy Now"
+            android:backgroundTint="@color/black"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginStart="8dp"
+            android:gravity="center"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

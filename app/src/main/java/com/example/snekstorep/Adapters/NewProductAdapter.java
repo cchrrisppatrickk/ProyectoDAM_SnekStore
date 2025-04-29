@@ -2,7 +2,6 @@ package com.example.snekstorep.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,7 @@ public class NewProductAdapter extends RecyclerView.Adapter<NewProductAdapter.Vi
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.newImg);
 
-        holder.newName.setText(list.get(position).getName());
+        holder.newName.setText(list.get(position).getTitle());
 
         // Formatear precio simple: "S/ " + dos decimales
         double precio = list.get(position).getPrice();
