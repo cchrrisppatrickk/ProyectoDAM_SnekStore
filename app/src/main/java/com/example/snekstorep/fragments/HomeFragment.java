@@ -1,5 +1,6 @@
     package com.example.snekstorep.fragments;
 
+    import android.content.Intent;
     import android.os.Bundle;
 
     import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
+    import android.widget.TextView;
     import android.widget.Toast;
 
     import com.denzcoskun.imageslider.ImageSlider;
@@ -19,6 +21,7 @@
     import com.example.snekstorep.Adapters.CategoryAdapter;
     import com.example.snekstorep.Adapters.NewProductAdapter;
     import com.example.snekstorep.R;
+    import com.example.snekstorep.activities.ShowAllActivity;
     import com.example.snekstorep.models.CategoryModel;
     import com.example.snekstorep.models.ProductModel;
     import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,6 +40,10 @@
     import java.util.List;
 
     public class HomeFragment extends Fragment {
+
+
+        TextView catShowAll, popularShowAll, newProductShowAll;
+
 
 
         RecyclerView catRecyclerview, newProductRecyclerview;
@@ -65,11 +72,43 @@
             catRecyclerview = root.findViewById(R.id.rec_category);
             newProductRecyclerview = root.findViewById(R.id.new_product_rec);
 
+            /// ShowAll ///
+
+            catShowAll = root.findViewById(R.id.category_see_all);
+            popularShowAll = root.findViewById(R.id.popular_see_all);
+            newProductShowAll = root.findViewById(R.id.newProducts_see_all);
+
+            catShowAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            popularShowAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            newProductShowAll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+
+            /// End ShowAll ///
+
+
 
             // En HomeFragment reemplaza:
             db = FirebaseFirestore.getInstance();
-
-
 
 
             // Inicializar el ImageSlider

@@ -6,6 +6,7 @@
     <string name="description">Descubre las últimas tendencias en calzado con estilo y comodidad</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_show_all">ShowAllActivity</string>
 
 
 </resources>

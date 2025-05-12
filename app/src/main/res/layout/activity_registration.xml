@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/designlogin2"
+    android:background="@drawable/background6"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".activities.RegistrationActivity">
@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="Registro"
                 android:textAlignment="center"
-                android:textColor="@color/textHeading"
+                android:textColor="@color/dark_navy_blue"
                 android:textSize="34sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
                 android:ems="10"
                 android:inputType="text"
                 android:textColor="@color/black"
-                android:textColorHint="@color/cardview_dark_background" />
+                android:textColorHint="@color/dark_navy_blue" />
 
             <EditText
                 android:id="@+id/email"
@@ -61,7 +61,7 @@
                 android:ems="10"
                 android:inputType="textEmailAddress"
                 android:textColor="@color/black"
-                android:textColorHint="@color/cardview_dark_background" />
+                android:textColorHint="@color/dark_navy_blue" />
 
             <EditText
                 android:id="@+id/password"
@@ -75,14 +75,14 @@
                 android:ems="10"
                 android:inputType="textPassword"
                 android:textColor="@color/black"
-                android:textColorHint="@color/cardview_dark_background" />
+                android:textColorHint="@color/dark_navy_blue" />
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:backgroundTint="@color/pink"
+                android:backgroundTint="@color/navy_blue"
                 android:text="Registrarse"
                 android:textSize="20sp"
                 app:cornerRadius="20dp"/>
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:text="¿Ya tienes una cuenta?"
         android:textAlignment="center"
-        android:textColor="@color/textHeading"
+        android:textColor="@color/white"
         android:textSize="18sp" />
 
     <TextView
@@ -105,7 +105,7 @@
         android:layout_marginTop="4dp"
         android:text="Iniciar sesión"
         android:textAlignment="center"
-        android:textColor="@color/pink"
+        android:textColor="@color/white"
         android:textSize="19sp"
         android:textStyle="bold" />
 
