@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.snekstorep.Adapters.SizeAdapter;
 import com.example.snekstorep.R;
 import com.example.snekstorep.models.ProductModel;
+import com.example.snekstorep.models.ShowAllModel;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,6 +33,8 @@ public class DetailedActivity extends AppCompatActivity {
     ProductModel productModel = null;
 
 
+    //Show Alll
+    ShowAllModel showAllModel  = null;
 
     //SIze
     private RecyclerView sizeList;
@@ -52,6 +55,8 @@ public class DetailedActivity extends AppCompatActivity {
 
         if (obj instanceof ProductModel){
             productModel = (ProductModel) obj;
+        }else if (obj instanceof ShowAllModel){
+            showAllModel = (ShowAllModel) obj;
         }
 
         detailedImg = findViewById(R.id.detailed_img);
@@ -75,6 +80,16 @@ public class DetailedActivity extends AppCompatActivity {
             price.setText("S/ " + String.valueOf(productModel.getPrice()));
             name.setText(productModel.getTitle());
         }
+        // Mostrar todos los productos
+        if (showAllModel != null) {
+            Glide.with(getApplicationContext()).load(showAllModel.getImg_url()).into(detailedImg);
+            name.setText(showAllModel.getName());
+            rating.setText(showAllModel.getRating());
+            description.setText(showAllModel.getDescription());
+            price.setText(String.valueOf(showAllModel.getPrice()));
+            name.setText(showAllModel.getName());
+        }
+
 
         sizeList = findViewById(R.id.sizeList);
         sizeList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

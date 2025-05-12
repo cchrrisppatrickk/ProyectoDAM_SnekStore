@@ -1,6 +1,8 @@
 package com.example.snekstorep.models;
 
-public class ShowAllModel {
+import java.io.Serializable;
+
+public class ShowAllModel implements Serializable {
 
     String description;
     String name;
