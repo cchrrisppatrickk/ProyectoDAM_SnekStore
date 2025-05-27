@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.snekstorep.R;
 import com.example.snekstorep.activities.DetailedActivity;
+import com.example.snekstorep.models.ProductModel;
 import com.example.snekstorep.models.ShowAllModel;
 
 import java.util.List;
@@ -21,9 +22,9 @@ import java.util.List;
 public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHolder> {
 
     private Context context;
-    private List<ShowAllModel> list;
+    private List<ProductModel> list;
 
-    public ShowAllAdapter(Context context, List<ShowAllModel> list) {
+    public ShowAllAdapter(Context context, List<ProductModel> list) {
         this.context = context;
         this.list = list;
     }
@@ -31,46 +32,39 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.show_all_item,parent, false));
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.show_all_item, parent, false);
+        return new ViewHolder(view);
     }
 
-
+    // En onBindViewHolder:
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(context).load(list.get(position).getImg_url()).into(holder.mItemImage);
-        holder.mCost.setText("s/ "+ list.get(position).getPrice());
-        holder.mName.setText(list.get(position).getName());
+        Glide.with(context).load(list.get(position).getImg_url()).into(holder.imageView);
+        holder.name.setText(list.get(position).getTitle()); // Usa getTitle()
+        holder.price.setText("S/ " + list.get(position).getPrice());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, DetailedActivity.class);
-                intent.putExtra("detailed", list.get(position));
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, DetailedActivity.class);
+            intent.putExtra("detailed", list.get(position)); // Envía ProductModel
+            context.startActivity(intent);
         });
-
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return list.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-        private ImageView mItemImage;
-        private TextView mCost;
-        private TextView mName;
+        ImageView imageView;
+        TextView name, price;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            mItemImage = itemView.findViewById(R.id.item_image);
-            mCost = itemView.findViewById(R.id.item_cost);
-            mName = itemView.findViewById(R.id.item_name);
+            imageView = itemView.findViewById(R.id.item_image);
+            name = itemView.findViewById(R.id.item_name);
+            price = itemView.findViewById(R.id.item_cost);
         }
     }
-
-
 }

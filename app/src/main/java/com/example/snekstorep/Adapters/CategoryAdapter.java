@@ -1,6 +1,7 @@
 package com.example.snekstorep.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.snekstorep.R;
+import com.example.snekstorep.activities.ShowAllActivity;
 import com.example.snekstorep.databinding.CategoryListBinding;
 import com.example.snekstorep.models.CategoryModel;
 
@@ -79,6 +81,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             }
             notifyItemChanged(selectedPosition);
         });
+
+        /// all products
+//        holder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(context, ShowAllActivity.class);
+//                intent.putExtra("type", list.get(position).getType());
+//                context.startActivity(intent);
+//            }
+//        });
 
 
 

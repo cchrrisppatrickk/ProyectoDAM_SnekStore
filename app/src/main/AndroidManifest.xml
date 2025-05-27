@@ -17,7 +17,6 @@
         <activity
             android:name=".activities.ShowAllActivity"
             android:exported="false"
-            android:label="@string/title_activity_show_all"
             android:theme="@style/Theme.SnekStorep" />
         <activity
             android:name=".activities.DetailActivity"

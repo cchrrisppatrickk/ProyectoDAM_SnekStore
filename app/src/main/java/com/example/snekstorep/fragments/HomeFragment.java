@@ -74,25 +74,22 @@
 
             /// ShowAll ///
 
-            catShowAll = root.findViewById(R.id.category_see_all);
+//            catShowAll = root.findViewById(R.id.category_see_all);
             popularShowAll = root.findViewById(R.id.popular_see_all);
             newProductShowAll = root.findViewById(R.id.newProducts_see_all);
 
-            catShowAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                    startActivity(intent);
-                }
-            });
+//            catShowAll.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
+//                    startActivity(intent);
+//                }
+//            });
 
-            popularShowAll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                    startActivity(intent);
-                }
-            });
+            popularShowAll.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                startActivity(intent);
+           });
 
             newProductShowAll.setOnClickListener(new View.OnClickListener() {
                 @Override
