@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.example.snekstorep.R;
 import com.example.snekstorep.activities.DetailedActivity;
 import com.example.snekstorep.models.ProductModel;
-import com.example.snekstorep.models.ShowAllModel;
 
 import java.util.List;
 
