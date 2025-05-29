@@ -32,6 +32,19 @@
             android:inputType="text"
             android:padding="1dp" />
 
+        <!-- Icono de carrito -->
+        <ImageButton
+            android:id="@+id/cartIconBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Carrito de compras"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_baseline_shopping_cart_24"
+            android:tint="@color/black" />
+
+        <!-- Icono de usuario -->
         <ImageButton
             android:id="@+id/userIcon"
             android:layout_width="48dp"

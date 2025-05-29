@@ -8,10 +8,10 @@
     import androidx.recyclerview.widget.LinearLayoutManager;
     import androidx.recyclerview.widget.RecyclerView;
 
-    import android.util.Log;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.ViewGroup;
+    import android.widget.ImageButton;
     import android.widget.TextView;
     import android.widget.Toast;
 
@@ -21,18 +21,13 @@
     import com.example.snekstorep.Adapters.CategoryAdapter;
     import com.example.snekstorep.Adapters.NewProductAdapter;
     import com.example.snekstorep.R;
+    import com.example.snekstorep.activities.CartActivity;
     import com.example.snekstorep.activities.ShowAllActivity;
     import com.example.snekstorep.models.CategoryModel;
     import com.example.snekstorep.models.ProductModel;
     import com.google.android.gms.tasks.OnCompleteListener;
     import com.google.android.gms.tasks.Task;
-    import com.google.firebase.database.DataSnapshot;
-    import com.google.firebase.database.DatabaseError;
-    import com.google.firebase.database.DatabaseReference;
-    import com.google.firebase.database.FirebaseDatabase;
-    import com.google.firebase.database.ValueEventListener;
     import com.google.firebase.firestore.FirebaseFirestore;
-    import com.google.firebase.firestore.Query;
     import com.google.firebase.firestore.QueryDocumentSnapshot;
     import com.google.firebase.firestore.QuerySnapshot;
 
@@ -53,6 +48,7 @@
         List<CategoryModel> categoryModelList;
 
 
+
         // Agrega estas variables
         private NewProductAdapter newProductAdapter;
         private List<ProductModel> productModelList;
@@ -69,8 +65,22 @@
                                  Bundle savedInstanceState) {
             // Inflar el diseño para este fragmento
             View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+            // Dentro de onCreateView, después de inflar la vista (View root = ...)
+            ImageButton cartIconBtn = root.findViewById(R.id.cartIconBtn);
+            cartIconBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), CartActivity.class);
+                    startActivity(intent);
+                }
+            });
+
             catRecyclerview = root.findViewById(R.id.rec_category);
             newProductRecyclerview = root.findViewById(R.id.new_product_rec);
+
+
+
 
             /// ShowAll ///
 

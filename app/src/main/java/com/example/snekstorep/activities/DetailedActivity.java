@@ -1,5 +1,6 @@
 package com.example.snekstorep.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -91,11 +92,14 @@ public class DetailedActivity extends AppCompatActivity {
             sizeList.setVisibility(View.GONE);
         }
 
-        // Configurar botón de compra
+        // Configurar botón de compra (MANTIENE SU FUNCIÓN ACTUAL)
         buyNowBtn.setOnClickListener(v -> handleBuyButtonClick());
 
-        // Configurar botón del carrito
-        cartIconBtn.setOnClickListener(v -> handleBuyButtonClick());
+        // Configurar botón del carrito (NUEVO COMPORTAMIENTO)
+        cartIconBtn.setOnClickListener(v -> {
+            // Redirigir a la actividad del carrito
+            startActivity(new Intent(DetailedActivity.this, CartActivity.class));
+        });
     }
 
     private void handleBuyButtonClick() {
@@ -132,9 +136,11 @@ public class DetailedActivity extends AppCompatActivity {
         // Crear mapa de datos
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("productName", productModel.getTitle());
-        cartMap.put("productPrice", productModel.getPrice());
+        cartMap.put("productImage", productModel.getImg_url());
         cartMap.put("currentTime", saveCurrentTime);
         cartMap.put("productDate", saveCurrentDate);
+        cartMap.put("totalQuantity", 1); // Cantidad inicial
+        cartMap.put("totalPrice", productModel.getPrice()); // Precio total inicial
         cartMap.put("productSize", size);
 
         // Guardar en Firestore
