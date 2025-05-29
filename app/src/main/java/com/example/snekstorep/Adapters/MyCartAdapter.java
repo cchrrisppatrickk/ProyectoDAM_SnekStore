@@ -21,6 +21,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     Context context;
     List<MyCartModel> list;
 
+
     public MyCartAdapter(Context context, List<MyCartModel> list) {
         this.context = context;
         this.list = list;
@@ -36,7 +37,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Glide.with(context).load(list.get(position).getProductImage()).into(holder.imageView);
         holder.name.setText(list.get(position).getProductName());
-        holder.price.setText("S/ " + list.get(position).getProductPrice());
+        holder.price.setText("S/ " + list.get(position).getTotalPrice());
         holder.size.setText("Talla: " + list.get(position).getProductSize());
         holder.quantity.setText("Cantidad: " + list.get(position).getTotalQuantity());
     }

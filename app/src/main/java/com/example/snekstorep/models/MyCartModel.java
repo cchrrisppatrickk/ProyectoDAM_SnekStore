@@ -10,7 +10,17 @@ public class MyCartModel {
     int totalQuantity;
     Double totalPrice;
 
+    private String documentId; // Nuevo campo para almacenar el ID del documento
+
     public MyCartModel() {}
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
 
     // Getters y Setters
     public String getProductName() { return productName; }
