@@ -3,6 +3,7 @@ package com.example.snekstorep.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -48,24 +49,61 @@ public class CartActivity extends AppCompatActivity {
         cartAdapter = new MyCartAdapter(this, cartModelList);
         recyclerView.setAdapter(cartAdapter);
 
-        // Obtener productos del carrito
+        // Configurar listener para eliminar items
+        cartAdapter.setOnDeleteClickListener(position -> {
+            MyCartModel itemToDelete = cartModelList.get(position);
+            deleteItemFromFirestore(itemToDelete, position);
+        });
+
+
+        // Configurar listener para eliminar items
+        cartAdapter.setOnDeleteClickListener(position -> {
+            MyCartModel itemToDelete = cartModelList.get(position);
+            deleteItemFromFirestore(itemToDelete, position);
+        });
+
+
+        // Obtener productos del carrito (ACTUALIZADO para guardar documentId)
         firestore.collection("AddToCart")
                 .document(auth.getCurrentUser().getUid())
                 .collection("User")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                MyCartModel cartModel = document.toObject(MyCartModel.class);
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            MyCartModel cartModel = document.toObject(MyCartModel.class);
+                            if (cartModel != null) {
+                                cartModel.setDocumentId(document.getId()); // GUARDAR ID DEL DOCUMENTO
                                 cartModelList.add(cartModel);
-                                cartAdapter.notifyDataSetChanged();
                             }
-                            calculateTotal(cartModelList);
                         }
+                        cartAdapter.notifyDataSetChanged();
+                        calculateTotal(cartModelList);
                     }
                 });
+    }
+
+    private void deleteItemFromFirestore(MyCartModel item, int position) {
+        if (item.getDocumentId() != null) {
+            firestore.collection("AddToCart")
+                    .document(auth.getCurrentUser().getUid())
+                    .collection("User")
+                    .document(item.getDocumentId())
+                    .delete()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            // Eliminar de la lista local
+                            cartModelList.remove(position);
+                            cartAdapter.notifyItemRemoved(position);
+                            calculateTotal(cartModelList);
+                            Toast.makeText(CartActivity.this, "Producto eliminado", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(CartActivity.this, "Error al eliminar: " + task.getException(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "Error: ID de documento no encontrado", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void calculateTotal(List<MyCartModel> cartModelList) {

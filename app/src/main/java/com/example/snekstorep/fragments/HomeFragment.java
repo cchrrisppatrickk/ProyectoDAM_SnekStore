@@ -22,11 +22,14 @@
     import com.example.snekstorep.Adapters.NewProductAdapter;
     import com.example.snekstorep.R;
     import com.example.snekstorep.activities.CartActivity;
+    import com.example.snekstorep.activities.LoginActivity;
+    import com.example.snekstorep.activities.RegistrationActivity;
     import com.example.snekstorep.activities.ShowAllActivity;
     import com.example.snekstorep.models.CategoryModel;
     import com.example.snekstorep.models.ProductModel;
     import com.google.android.gms.tasks.OnCompleteListener;
     import com.google.android.gms.tasks.Task;
+    import com.google.firebase.auth.FirebaseAuth;
     import com.google.firebase.firestore.FirebaseFirestore;
     import com.google.firebase.firestore.QueryDocumentSnapshot;
     import com.google.firebase.firestore.QuerySnapshot;
@@ -56,6 +59,9 @@
 
         FirebaseFirestore db;
 
+        // Añade esta variable
+        private FirebaseAuth auth;
+
         public HomeFragment() {
             // Required empty public constructor
         }
@@ -65,6 +71,19 @@
                                  Bundle savedInstanceState) {
             // Inflar el diseño para este fragmento
             View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+            // Inicializa Firebase Auth
+            auth = FirebaseAuth.getInstance();
+
+            // Configura el botón de logout (reemplaza el antiguo userIcon)
+            ImageButton logoutBtn = root.findViewById(R.id.logoutBtn);
+            logoutBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cerrarSesion();
+                }
+            });
+
 
             // Dentro de onCreateView, después de inflar la vista (View root = ...)
             ImageButton cartIconBtn = root.findViewById(R.id.cartIconBtn);
@@ -182,6 +201,14 @@
             return root;
         }
 
+        // Método para cerrar sesión
+        private void cerrarSesion() {
+            auth.signOut();
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            getActivity().finish();
+        }
 
 
     }

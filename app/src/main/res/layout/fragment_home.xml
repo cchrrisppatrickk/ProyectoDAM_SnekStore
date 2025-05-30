@@ -46,7 +46,7 @@
 
         <!-- Icono de usuario -->
         <ImageButton
-            android:id="@+id/userIcon"
+            android:id="@+id/logoutBtn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"

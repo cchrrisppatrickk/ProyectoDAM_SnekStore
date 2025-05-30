@@ -20,6 +20,15 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
     Context context;
     List<MyCartModel> list;
+    private OnDeleteClickListener deleteClickListener;
+
+    public interface OnDeleteClickListener {
+        void onDeleteClick(int position);
+    }
+
+    public void setOnDeleteClickListener(OnDeleteClickListener listener) {
+        this.deleteClickListener = listener;
+    }
 
 
     public MyCartAdapter(Context context, List<MyCartModel> list) {
@@ -40,6 +49,13 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         holder.price.setText("S/ " + list.get(position).getTotalPrice());
         holder.size.setText("Talla: " + list.get(position).getProductSize());
         holder.quantity.setText("Cantidad: " + list.get(position).getTotalQuantity());
+
+        // Configurar botón de eliminar
+        holder.deleteBtn.setOnClickListener(v -> {
+            if (deleteClickListener != null) {
+                deleteClickListener.onDeleteClick(position);
+            }
+        });
     }
 
     @Override
@@ -48,7 +64,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        ImageView imageView, deleteBtn;
         TextView name, price, size, quantity;
 
         public ViewHolder(@NonNull View itemView) {
@@ -58,6 +74,17 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             price = itemView.findViewById(R.id.cart_item_price);
             size = itemView.findViewById(R.id.cart_item_size);
             quantity = itemView.findViewById(R.id.cart_item_quantity);
+            deleteBtn = itemView.findViewById(R.id.eachCartItemDeleteBtn);
+
+            // Configurar el botón de eliminar
+            deleteBtn.setOnClickListener(v -> {
+                if (deleteClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        deleteClickListener.onDeleteClick(position);
+                    }
+                }
+            });
         }
     }
 }

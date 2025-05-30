@@ -134,14 +134,17 @@ public class DetailedActivity extends AppCompatActivity {
         String saveCurrentTime = currentTime.format(calForDate.getTime());
 
         // Crear mapa de datos
+        // Crear mapa de datos
         final HashMap<String, Object> cartMap = new HashMap<>();
         cartMap.put("productName", productModel.getTitle());
         cartMap.put("productImage", productModel.getImg_url());
         cartMap.put("currentTime", saveCurrentTime);
         cartMap.put("productDate", saveCurrentDate);
         cartMap.put("totalQuantity", 1); // Cantidad inicial
+        cartMap.put("unitPrice", productModel.getPrice()); // AÑADIDO: Precio unitario
         cartMap.put("totalPrice", productModel.getPrice()); // Precio total inicial
         cartMap.put("productSize", size);
+
 
         // Guardar en Firestore
         firestore.collection("AddToCart")
