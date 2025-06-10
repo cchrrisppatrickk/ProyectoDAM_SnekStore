@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -147,13 +148,41 @@ public class DetailedActivity extends AppCompatActivity {
 
 
         // Guardar en Firestore
-        firestore.collection("AddToCart")
-                .document(auth.getCurrentUser().getUid())
+        FirebaseFirestore.getInstance()
+                .collection("AddToCart")
+                .document(auth.getUid())
                 .collection("User")
-                .add(cartMap)
+                .whereEqualTo("productName", productModel.getTitle())
+                .whereEqualTo("productSize", size)
+                .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(DetailedActivity.this, "Producto añadido", Toast.LENGTH_SHORT).show();
+                        if (!task.getResult().isEmpty()) {
+                            // Actualizar cantidad si ya existe
+                            DocumentSnapshot doc = task.getResult().getDocuments().get(0);
+                            int newQuantity = doc.getLong("totalQuantity").intValue() + 1;
+                            doc.getReference().update("totalQuantity", newQuantity)
+                                    .addOnCompleteListener(updateTask -> {
+                                        if (updateTask.isSuccessful()) {
+                                            Toast.makeText(DetailedActivity.this, "Producto actualizado", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(DetailedActivity.this, "Error: " + updateTask.getException(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            // Agregar nuevo ítem
+                            firestore.collection("AddToCart")
+                                    .document(auth.getUid())
+                                    .collection("User")
+                                    .add(cartMap)
+                                    .addOnCompleteListener(addTask -> {
+                                        if (addTask.isSuccessful()) {
+                                            Toast.makeText(DetailedActivity.this, "Producto añadido", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(DetailedActivity.this, "Error: " + addTask.getException(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
                     } else {
                         Toast.makeText(DetailedActivity.this, "Error: " + task.getException(), Toast.LENGTH_SHORT).show();
                     }
