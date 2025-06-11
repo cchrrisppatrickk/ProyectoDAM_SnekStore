@@ -14,6 +14,7 @@ import com.example.snekstorep.R;
 import com.example.snekstorep.activities.AddressActivity;
 import com.example.snekstorep.models.AddressModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHolder> {
@@ -41,25 +42,17 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.address.setText(addressModelList.get(position).getUserAddress());
+        holder.radioButton.setChecked(addressModelList.get(position).isSelected());
 
-        holder.radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                for (AddressModel address : addressModelList) {
-                    address.setSelected(false);
-                }
-                addressModelList.get(position).setSelected(true);
-
-                if (selectedRadioBtn != null) {
-                    selectedRadioBtn.setChecked(false);
-                }
-
-                selectedRadioBtn = (RadioButton) v;
-                selectedRadioBtn.setChecked(true);
-
-                selectedAddress.setAddress(addressModelList.get(position).getUserAddress());
+        // En AddressAdapter, modifica el onClick del radioButton:
+        holder.radioButton.setOnClickListener(v -> {
+            // Actualizar estado en todos los modelos
+            for (int i = 0; i < addressModelList.size(); i++) {
+                addressModelList.get(i).setSelected(i == position);
             }
+            notifyDataSetChanged();
+            selectedAddress.setAddress(addressModelList.get(position).getUserAddress());
         });
     }
 
@@ -69,6 +62,12 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.ViewHold
         return addressModelList.size();
     }
 
+    // Agregar método para actualizar datos
+    // En la clase AddressAdapter
+    public void updateAddresses(List<AddressModel> newList) {
+        addressModelList = new ArrayList<>(newList);
+        notifyDataSetChanged();
+    }
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView address;
         RadioButton radioButton;

@@ -1,7 +1,9 @@
 package com.example.snekstorep.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,9 @@ public class CartActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth auth;
 
+
+    Button checkoutBtn; // Agrega esta línea
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,26 @@ public class CartActivity extends AppCompatActivity {
         cartModelList = new ArrayList<>();
         cartAdapter = new MyCartAdapter(this, cartModelList);
         recyclerView.setAdapter(cartAdapter);
+
+        // Inicializar botón de checkout
+        checkoutBtn = findViewById(R.id.cartActivityCheckoutBtn);
+
+
+        // Listener para procesar compra
+        checkoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cartModelList.isEmpty()) {
+                    Toast.makeText(CartActivity.this,
+                            "Tu carrito está vacío",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Verificar si hay dirección guardada
+                    checkExistingAddresses();
+                }
+            }
+        });
+
 
         // Configurar listener para eliminar items
         cartAdapter.setOnDeleteClickListener(position -> {
@@ -112,5 +137,21 @@ public class CartActivity extends AppCompatActivity {
             total += model.getTotalPrice();
         }
         totalPrice.setText("S/ " + total);
+    }
+
+    private void checkExistingAddresses() {
+        firestore.collection("CurrentUser")
+                .document(auth.getCurrentUser().getUid())
+                .collection("Address")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                        // Hay direcciones existentes - ir a selección
+                        startActivity(new Intent(CartActivity.this, AddressActivity.class));
+                    } else {
+                        // No hay direcciones - ir a creación
+                        startActivity(new Intent(CartActivity.this, AddAddressActivity.class));
+                    }
+                });
     }
 }

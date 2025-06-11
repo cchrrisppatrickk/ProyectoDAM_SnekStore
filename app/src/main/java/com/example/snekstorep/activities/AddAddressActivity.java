@@ -38,77 +38,76 @@ public class AddAddressActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_address);
 
-        toolbar = findViewById(R.id.add_address_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        // Configurar toolbar
+//        Toolbar toolbar = findViewById(R.id.add_address_toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // Inicializar Firebase
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
-
+        // Inicializar vistas
         name = findViewById(R.id.ad_name);
         address = findViewById(R.id.ad_address);
         city = findViewById(R.id.ad_city);
         phoneNumber = findViewById(R.id.ad_phone);
         postalCode = findViewById(R.id.ad_code);
+        addAddressBtn = findViewById(R.id.ad_add_address); // ¡IMPORTANTE! Inicializar el botón
 
         addAddressBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Obtener valores
                 String userName = name.getText().toString();
                 String userCity = city.getText().toString();
                 String userAddress = address.getText().toString();
                 String userCode = postalCode.getText().toString();
                 String userNumber = phoneNumber.getText().toString();
+
+                // Construir dirección formateada
+                StringBuilder direccionFinal = new StringBuilder();
+                if (!userName.isEmpty()) direccionFinal.append(userName).append("\n");
+                if (!userAddress.isEmpty()) direccionFinal.append(userAddress).append("\n");
+                if (!userCity.isEmpty()) direccionFinal.append(userCity).append(", ");
+                if (!userCode.isEmpty()) direccionFinal.append(userCode).append("\n");
+                if (!userNumber.isEmpty()) direccionFinal.append("Tel: ").append(userNumber);
+
+                // Validar campos
+                if (userName.isEmpty() || userAddress.isEmpty() ||
+                        userCity.isEmpty() || userCode.isEmpty() || userNumber.isEmpty()) {
+
+                    Toast.makeText(AddAddressActivity.this,
+                            "Por favor complete todos los campos",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Crear objeto para Firestore
+                    Map<String, Object> direccionMap = new HashMap<>();
+                    direccionMap.put("userAddress", direccionFinal.toString());
+                    direccionMap.put("isSelected", false); // Campo requerido
+
+                    // Guardar en Firestore
+                    firestore.collection("CurrentUser")
+                            .document(auth.getCurrentUser().getUid())
+                            .collection("Address")
+                            .add(direccionMap)
+                            .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(AddAddressActivity.this,
+                                                "Dirección agregada!",
+                                                Toast.LENGTH_SHORT).show();
+                                        finish(); // Cerrar actividad
+                                    } else {
+                                        Toast.makeText(AddAddressActivity.this,
+                                                "Error: " + task.getException().getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
             }
         });
-
-        String final_address = "";
-
-        if (!userName.isEmpty()){
-            final_address += userName;
-        }
-
-        if (!userCity.isEmpty()){
-            final_address += userCity;
-        }
-
-        if (!userAddress.isEmpty()){
-            final_address += userAddress;
-        }
-
-        if (!userCode.isEmpty()){
-            final_address += userCode;
-        }
-
-        if (!userNumber.isEmpty()){
-            final_address += userNumber;
-        }
-
-        if (!userName.isEmpty() && !userCity.isEmpty() && !userAddress.isEmpty() && !userCode.isEmpty()) {
-
-            Map<String, String> map = new HashMap<>();
-            map.put("userAddress", final_address);
-
-            firestore.collection("CurrentUser")
-                    .document(auth.getCurrentUser().getUid())
-                    .collection("Address")
-                    .add(map)
-                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentReference> task) {
-                            Toast.makeText( AddAddressActivity.this, "Address Added", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
-
-        }
-        else{
-            Toast.makeText(AddAddressActivity.this, "Kindly fill all Field", Toast.LENGTH_SHORT).show();
-        }
-
-
-
     }
-
 }
