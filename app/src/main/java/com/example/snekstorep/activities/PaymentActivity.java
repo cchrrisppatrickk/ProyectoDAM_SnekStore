@@ -19,9 +19,20 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.snekstorep.R;
+import com.example.snekstorep.models.MyCartModel;
+import com.example.snekstorep.models.PurchaseHistoryModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -32,40 +43,81 @@ public class PaymentActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
 
-        // Inicializar Firebase
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Obtener referencias de vistas
         totalAmountTv = findViewById(R.id.total_amt);
         payBtn = findViewById(R.id.pay_btn);
 
-        // Obtener el total del intent
         totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
         totalAmountTv.setText(String.format("S/ %.2f", totalAmount));
 
-        // Configurar botón de pago
         payBtn.setOnClickListener(v -> processPayment());
     }
 
     private void processPayment() {
-        // Simular procesamiento de pago
         Toast.makeText(this, "Procesando pago...", Toast.LENGTH_SHORT).show();
 
-        new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            // Limpiar el carrito después del pago
-            clearCart();
+        // Primero obtenemos los items del carrito
+        firestore.collection("AddToCart")
+                .document(auth.getCurrentUser().getUid())
+                .collection("User")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<MyCartModel> cartItems = new ArrayList<>();
+                        for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                            MyCartModel cartModel = document.toObject(MyCartModel.class);
+                            if (cartModel != null) {
+                                cartModel.setDocumentId(document.getId());
+                                cartItems.add(cartModel);
+                            }
+                        }
 
-            // Mostrar diálogo de éxito
-            showSuccessDialog();
-        }, 1500);
+                        // Guardamos el historial antes de limpiar el carrito
+                        savePurchaseHistory(cartItems);
+                    } else {
+                        Toast.makeText(this, "Error al obtener items del carrito", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void savePurchaseHistory(List<MyCartModel> cartItems) {
+        // Generar ID único para la compra
+        String purchaseId = firestore.collection("PurchaseHistory").document().getId();
+
+        // Obtener fecha actual
+        String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+
+        // Crear objeto de historial
+        PurchaseHistoryModel purchase = new PurchaseHistoryModel(
+                purchaseId,
+                auth.getCurrentUser().getUid(),
+                currentDate,
+                totalAmount,
+                cartItems
+        );
+
+        // Guardar en Firestore
+        firestore.collection("PurchaseHistory")
+                .document(auth.getCurrentUser().getUid())
+                .collection("UserPurchases")
+                .document(purchaseId)
+                .set(purchase)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Una vez guardado el historial, limpiar el carrito
+                        clearCart();
+                        showSuccessDialog();
+                    } else {
+                        Toast.makeText(this, "Error al guardar historial de compra", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void clearCart() {
@@ -78,29 +130,25 @@ public class PaymentActivity extends AppCompatActivity {
                         for (DocumentSnapshot document : task.getResult().getDocuments()) {
                             document.getReference().delete();
                         }
-                        // Ya no llamamos a finish() aquí
                     } else {
                         Toast.makeText(this, "Error al limpiar el carrito", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
     private void showSuccessDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_purchase_success, null);
 
-        // Usa el tema que definimos
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CircularDialogTheme);
         builder.setView(dialogView);
         builder.setCancelable(false);
 
         AlertDialog dialog = builder.create();
 
-        // Configuración crucial
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             window.setDimAmount(0.7f);
-
-            // Eliminar márgenes internos del diálogo
             window.getDecorView().setBackgroundColor(Color.TRANSPARENT);
             window.getDecorView().setPadding(0, 0, 0, 0);
 
@@ -111,7 +159,7 @@ public class PaymentActivity extends AppCompatActivity {
                     280,
                     getResources().getDisplayMetrics()
             );
-            layoutParams.height = layoutParams.width; // Mismo valor para mantener círculo
+            layoutParams.height = layoutParams.width;
             window.setAttributes(layoutParams);
         }
 
