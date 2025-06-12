@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="@color/navy_blue"
         android:text="Continuar al Pago"
         android:textColor="@android:color/white"

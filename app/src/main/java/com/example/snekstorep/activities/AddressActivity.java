@@ -51,11 +51,16 @@ public class AddressActivity extends AppCompatActivity implements AddressAdapter
     // Constante para solicitud de actividad
     private static final int REQUEST_CODE_ADD_ADDRESS = 1;
 
+    private double totalAmount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this); // Habilita diseño edge-to-edge
         setContentView(R.layout.activity_address);
+
+        // Obtener el total del carrito del intent
+        totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
 
         // Inicialización de Firebase
         firestore = FirebaseFirestore.getInstance();
@@ -84,7 +89,7 @@ public class AddressActivity extends AppCompatActivity implements AddressAdapter
             }
         });
 
-        // Listener para botón de pago (DESCOMENTADO Y MEJORADO)
+        // Modificar el listener del botón de pago
         paymentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,10 +98,19 @@ public class AddressActivity extends AppCompatActivity implements AddressAdapter
                             "Selecciona una dirección primero",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    startActivity(new Intent(AddressActivity.this, PaymentActivity.class));
+                    // Pasar tanto la dirección como el total a PaymentActivity
+                    Intent intent = new Intent(AddressActivity.this, PaymentActivity.class);
+                    intent.putExtra("selectedAddress", mAddress);
+                    intent.putExtra("totalAmount", totalAmount); // Pasar el total
+                    startActivity(intent);
+
+                    // Actualizar en Firestore la dirección seleccionada
+                    updateSelectedAddressInFirestore();
                 }
             }
         });
+
+
 
         // Carga inicial de direcciones
         loadAddresses();
@@ -160,5 +174,23 @@ public class AddressActivity extends AppCompatActivity implements AddressAdapter
                         }
                     }
                 });
+    }
+
+    // Método para actualizar la dirección seleccionada en Firestore
+    private void updateSelectedAddressInFirestore() {
+        for (AddressModel address : addressModelList) {
+            firestore.collection("CurrentUser")
+                    .document(auth.getCurrentUser().getUid())
+                    .collection("Address")
+                    .document(address.getDocumentId())
+                    .update("isSelected", address.isSelected())
+                    .addOnCompleteListener(task -> {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(AddressActivity.this,
+                                    "Error al actualizar dirección seleccionada",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 }

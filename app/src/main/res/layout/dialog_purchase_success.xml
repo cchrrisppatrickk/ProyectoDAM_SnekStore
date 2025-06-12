@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/dialog_background"
+        android:padding="20dp">
+
+        <!-- Contenido ajustado al círculo -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/compra"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="¡Compra realizada con éxito!"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Se procederá con el envío a la dirección seleccionada."
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginTop="8dp"/>
+
+            <Button
+                android:id="@+id/btn_continue_shopping"
+                android:layout_width="180dp"
+                android:layout_height="48dp"
+                android:text="Seguir comprando"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/light_navy_blue"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

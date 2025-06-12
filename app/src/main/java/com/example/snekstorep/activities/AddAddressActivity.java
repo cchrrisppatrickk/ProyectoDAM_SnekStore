@@ -33,10 +33,16 @@ public class AddAddressActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth auth;
 
+    private double totalAmount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_address);
+
+
+        // Obtener el total del intent
+        totalAmount = getIntent().getDoubleExtra("totalAmount", 0.0);
 
 //        // Configurar toolbar
 //        Toolbar toolbar = findViewById(R.id.add_address_toolbar);
