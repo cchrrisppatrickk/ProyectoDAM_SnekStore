@@ -43,6 +43,8 @@ public class PaymentActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
 
+    private String purchaseId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,9 +169,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         Button btnContinueShopping = dialogView.findViewById(R.id.btn_continue_shopping);
         btnContinueShopping.setOnClickListener(v -> {
-            Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
+
+            // Cerrar actividades anteriores
+            Intent mainIntent = new Intent(PaymentActivity.this, TrackOrderActivity.class);
+            mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainIntent);
+
             dialog.dismiss();
             finish();
         });
