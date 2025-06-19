@@ -80,7 +80,6 @@
             logoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cerrarSesion();
                 }
             });
 
@@ -201,14 +200,7 @@
             return root;
         }
 
-        // Método para cerrar sesión
-        private void cerrarSesion() {
-            auth.signOut();
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            getActivity().finish();
-        }
+
 
 
     }

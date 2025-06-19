@@ -18,49 +18,89 @@ public class TrackOrderActivity extends AppCompatActivity {
 
     private FirebaseFirestore firestore;
     private FirebaseAuth auth;
-    private TextView destinationTextView;
+    private TextView destinationTextView, orderStatusTextView;
     private Button confirmDeliveryButton;
+    private String orderId;
+    private String currentStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_order);
 
-        // Inicializar Firebase
+        // Inicializar TODAS las vistas
+        destinationTextView = findViewById(R.id.destination);
+        orderStatusTextView = findViewById(R.id.order_status); // Asegúrate de que este ID existe en tu layout
+        confirmDeliveryButton = findViewById(R.id.confirmDeliveryButton);
+
+        // Obtener datos del intent
+        orderId = getIntent().getStringExtra("order_id");
+        currentStatus = getIntent().getStringExtra("current_status");
+
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
-        // Obtener referencias de las vistas
-        destinationTextView = findViewById(R.id.destination);
-        confirmDeliveryButton = findViewById(R.id.confirmDeliveryButton);
+        // Mostrar estado actual
+        if (currentStatus != null) {
+            orderStatusTextView.setText("Estado actual: " + currentStatus);
 
-        // Configurar el listener del botón
-        confirmDeliveryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Crear un Intent para volver a la actividad principal
-                Intent intent = new Intent(TrackOrderActivity.this, MainActivity.class);
+            // Configurar el botón según el estado actual
+            if ("Entregado".equalsIgnoreCase(currentStatus)) {
+                confirmDeliveryButton.setText("Pedido Entregado");
+                confirmDeliveryButton.setEnabled(false);
+                confirmDeliveryButton.setVisibility(View.VISIBLE);
+            } else {
+                // Para cualquier otro estado (incluyendo Cancelado)
+                confirmDeliveryButton.setText("Marcar como Entregado");
+                confirmDeliveryButton.setEnabled(true);
+                confirmDeliveryButton.setVisibility(View.VISIBLE);
+            }
+        } else {
+            confirmDeliveryButton.setVisibility(View.GONE);
+        }
 
-                // Limpiar la pila de actividades para que MainActivity sea la única
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                // Iniciar la actividad
-                startActivity(intent);
-
-                // Finalizar la actividad actual
-                finish();
+        confirmDeliveryButton.setOnClickListener(v -> {
+            if (orderId != null) {
+                updateOrderStatus();
             }
         });
 
-        // Obtener y mostrar la dirección
         loadShippingAddress();
+    }
 
-        // También puedes obtener el estado del envío desde Firestore
-        // y actualizar los círculos de progreso según corresponda
+    private void updateOrderStatus() {
+        String userId = auth.getCurrentUser().getUid();
+
+        // 1. Actualizar en PurchaseHistory
+        firestore.collection("PurchaseHistory")
+                .document(userId)
+                .collection("UserPurchases")
+                .document(orderId)
+                .update("saleStatus", "Entregado")
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // 2. Actualizar en MyOrder (si existe)
+                        firestore.collection("CurrentUser")
+                                .document(userId)
+                                .collection("MyOrder")
+                                .document(orderId)
+                                .update("saleStatus", "Entregado")
+                                .addOnCompleteListener(task2 -> {
+                                    Toast.makeText(this, "Estado actualizado a Entregado", Toast.LENGTH_SHORT).show();
+
+                                    // Devolver resultado a OrderHistoryFragment
+                                    Intent resultIntent = new Intent();
+                                    resultIntent.putExtra("updated_order_id", orderId);
+                                    setResult(RESULT_OK, resultIntent);
+                                    finish();
+                                });
+                    } else {
+                        Toast.makeText(this, "Error al actualizar estado", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void loadShippingAddress() {
-        // 1. Obtener la dirección seleccionada (la marcada como isSelected = true)
         firestore.collection("CurrentUser")
                 .document(auth.getCurrentUser().getUid())
                 .collection("Address")
@@ -68,18 +108,15 @@ public class TrackOrderActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // Tomar la primera dirección seleccionada
                         DocumentSnapshot document = task.getResult().getDocuments().get(0);
                         String address = document.getString("userAddress");
 
-                        // Mostrar la dirección en el TextView
                         if (address != null && !address.isEmpty()) {
                             destinationTextView.setText("Destino: " + address);
                         } else {
                             destinationTextView.setText("Dirección no especificada");
                         }
                     } else {
-                        // Si no hay dirección seleccionada, mostrar la última usada o mensaje
                         destinationTextView.setText("No se encontró dirección de envío");
                         Toast.makeText(this, "No se encontró dirección seleccionada", Toast.LENGTH_SHORT).show();
                     }

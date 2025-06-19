@@ -102,7 +102,8 @@ public class PaymentActivity extends AppCompatActivity {
                 auth.getCurrentUser().getUid(),
                 currentDate,
                 totalAmount,
-                cartItems
+                cartItems,
+                "completado" // Estado por defecto al crear la compra
         );
 
         // Guardar en Firestore
@@ -171,7 +172,7 @@ public class PaymentActivity extends AppCompatActivity {
         btnContinueShopping.setOnClickListener(v -> {
 
             // Cerrar actividades anteriores
-            Intent mainIntent = new Intent(PaymentActivity.this, TrackOrderActivity.class);
+            Intent mainIntent = new Intent(PaymentActivity.this, MainActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mainIntent);
 

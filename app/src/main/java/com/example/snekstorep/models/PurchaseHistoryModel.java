@@ -5,29 +5,34 @@ import java.util.List;
 
 public class PurchaseHistoryModel {
 
-    private String purchaseId;
-    private String userId;
-    private String purchaseDate;
-    private double totalAmount;
-    private String saleStatus; // "completado", "cancelado"
-    private String shippingStatus; // "en empaquetado", "en ruta", "entregado"
-    private List<MyCartModel> items;
+    private String documentId; // Añade este campo
+    private String purchaseId;       // ID único de la compra
+    private String userId;          // ID del usuario
+    private String date;           // Fecha en formato "dd-MM-yyyy"
+    private double totalAmount;    // Total de la compra
+    private List<MyCartModel> cartItems; // Lista de productos comprados
+    private String saleStatus;     // Estado: "completado", "cancelado", etc.
 
+    // Constructor vacío (requerido para Firestore)
+    public PurchaseHistoryModel() {}
 
+    public static final String STATUS_CANCELLED = "Cancelado";
+    public static final String STATUS_DELIVERED = "Entregado";
+    public static final String STATUS_COMPLETED = "Completado";
 
-    // Constructor con parámetros
-    public PurchaseHistoryModel(String purchaseId, String userId, String purchaseDate,
-                                double totalAmount, List<MyCartModel> items) {
+    // Constructor completo
+    public PurchaseHistoryModel(String purchaseId, String userId, String date,
+                                double totalAmount, List<MyCartModel> cartItems,
+                                String saleStatus) {
         this.purchaseId = purchaseId;
         this.userId = userId;
-        this.purchaseDate = purchaseDate;
+        this.date = date;
         this.totalAmount = totalAmount;
-        this.items = items;
-        this.saleStatus = "completado";
-        this.shippingStatus = "en empaquetado";
+        this.cartItems = cartItems;
+        this.saleStatus = saleStatus;
     }
 
-
+    // Getters y Setters
     public String getPurchaseId() {
         return purchaseId;
     }
@@ -44,12 +49,12 @@ public class PurchaseHistoryModel {
         this.userId = userId;
     }
 
-    public String getPurchaseDate() {
-        return purchaseDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setPurchaseDate(String purchaseDate) {
-        this.purchaseDate = purchaseDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public double getTotalAmount() {
@@ -60,6 +65,14 @@ public class PurchaseHistoryModel {
         this.totalAmount = totalAmount;
     }
 
+    public List<MyCartModel> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<MyCartModel> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     public String getSaleStatus() {
         return saleStatus;
     }
@@ -68,19 +81,11 @@ public class PurchaseHistoryModel {
         this.saleStatus = saleStatus;
     }
 
-    public String getShippingStatus() {
-        return shippingStatus;
+    public String getDocumentId() {
+        return documentId;
     }
 
-    public void setShippingStatus(String shippingStatus) {
-        this.shippingStatus = shippingStatus;
-    }
-
-    public List<MyCartModel> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MyCartModel> items) {
-        this.items = items;
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }

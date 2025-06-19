@@ -1,0 +1,101 @@
+package com.example.snekstorep.Adapters;
+
+import android.graphics.Color;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.snekstorep.R;
+import com.example.snekstorep.models.MyCartModel;
+import com.example.snekstorep.models.PurchaseHistoryModel;
+
+import java.util.List;
+
+public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder> {
+    private List<PurchaseHistoryModel> purchaseList;
+    private OnTrackOrderClickListener trackOrderClickListener;
+
+    public interface OnTrackOrderClickListener {
+        void onTrackOrderClick(PurchaseHistoryModel purchase);
+    }
+
+    public OrderHistoryAdapter(List<PurchaseHistoryModel> purchaseList) {
+        this.purchaseList = purchaseList;
+    }
+
+    public void setOnTrackOrderClickListener(OnTrackOrderClickListener listener) {
+        this.trackOrderClickListener = listener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order_history, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        PurchaseHistoryModel purchase = purchaseList.get(position);
+
+        // Configurar vistas...
+        holder.dateText.setText("Fecha: " + purchase.getDate());
+        holder.totalText.setText("Total: S/ " + purchase.getTotalAmount());
+        holder.statusText.setText("Estado: " + purchase.getSaleStatus());
+
+        // Configurar color según estado...
+        int statusColor;
+        switch (purchase.getSaleStatus().toLowerCase()) {
+            case "cancelado":
+                statusColor = Color.GREEN;
+                break;
+            case "entregado":
+                statusColor = Color.RED;
+                break;
+            default:
+                statusColor = Color.GRAY;
+        }
+        holder.statusText.setTextColor(statusColor);
+
+        // Configurar items...
+        StringBuilder itemsText = new StringBuilder();
+        for (MyCartModel item : purchase.getCartItems()) {
+            itemsText.append(item.getProductName())
+                    .append(" x")
+                    .append(item.getTotalQuantity())
+                    .append("\n");
+        }
+        holder.itemsText.setText(itemsText.toString());
+
+        // Configurar botón (solo una vez)
+        holder.trackButton.setOnClickListener(v -> {
+            if (trackOrderClickListener != null) {
+                trackOrderClickListener.onTrackOrderClick(purchase);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return purchaseList.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView dateText, totalText, itemsText, statusText;
+        Button trackButton;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            dateText = itemView.findViewById(R.id.order_date);
+            totalText = itemView.findViewById(R.id.order_total);
+            itemsText = itemView.findViewById(R.id.order_items);
+            statusText = itemView.findViewById(R.id.order_status);
+            trackButton = itemView.findViewById(R.id.track_button);
+        }
+    }
+}

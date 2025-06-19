@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SnekStorep</string>
+
     <string name="first_slide">Encuentra tus zapatos ideales</string>
     <string name="second_slide">Envío rápido y seguro</string>
     <string name="third_slide">La mejor calidad y atención</string>
@@ -8,5 +8,19 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_show_all">ShowAllActivity</string>
 
+
+    <string name="app_name">SnekStore</string>
+    <string name="title_setting">Mi cuenta</string>
+
+    <string name="title_home">Home</string>
+    <!-- Nuevas strings para el menú -->
+    <string name="title_order_history">Historial de pedidos</string>
+    <string name="title_delivered_orders">Pedidos entregados</string>
+    <string name="title_login">Login</string>
+    <string name="title_logout">Cerrar sesión</string>
+
+
+    <string name="Open">Open</string>
+    <string name="Close">Close</string>
 
 </resources>

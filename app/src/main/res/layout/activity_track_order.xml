@@ -22,6 +22,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
+    <!-- Estado actual del pedido -->
+    <TextView
+        android:id="@+id/order_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Estado: Procesando"
+        android:textSize="18sp"
+        android:textColor="#303F9F"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toBottomOf="@id/mainTitle"
+        app:layout_constraintStart_toStartOf="parent"/>
+
     <!-- Tiempo de entrega -->
     <TextView
         android:id="@+id/deliveryTime"
@@ -31,7 +45,7 @@
         android:textSize="16sp"
         android:textColor="#4CAF50"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/mainTitle"
+        app:layout_constraintTop_toBottomOf="@id/order_status"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <!-- Destino -->
@@ -39,7 +53,7 @@
         android:id="@+id/destination"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Destino: Calle Prueba 123"
+        android:text="Destino: Cargando..."
         android:textSize="14sp"
         android:textColor="#666"
         android:layout_marginTop="8dp"
@@ -221,7 +235,7 @@
 
             <ImageView
                 android:id="@+id/circleEntregado"
-                android:layout_width="wrap_content"
+                android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginEnd="16dp"
                 android:src="@drawable/circle_pending" />
@@ -235,7 +249,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Botón de confirmar entrega - AHORA MÁS PEGADO AL CONTENIDO SUPERIOR -->
+    <!-- Botón de confirmar entrega -->
     <Button
         android:id="@+id/confirmDeliveryButton"
         android:layout_width="match_parent"
