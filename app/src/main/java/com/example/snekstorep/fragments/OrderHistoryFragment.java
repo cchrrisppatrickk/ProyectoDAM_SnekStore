@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.snekstorep.Adapters.OrderHistoryAdapter;
 import com.example.snekstorep.R;
+import com.example.snekstorep.activities.OrderDetailActivity;
 import com.example.snekstorep.activities.TrackOrderActivity;
 import com.example.snekstorep.models.PurchaseHistoryModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapter.OnTrackOrderClickListener {
+public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapter.OnTrackOrderClickListener, OrderHistoryAdapter.OnDetailClickListener {
     private FirebaseFirestore firestore;
 
     private RecyclerView orderHistoryRecycler;
@@ -53,12 +54,21 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
         purchaseList = new ArrayList<>();
         adapter = new OrderHistoryAdapter(purchaseList);
         adapter.setOnTrackOrderClickListener(this); // Establece el listener
+
+        adapter.setOnDetailClickListener(this); // Registra el listener
+
         recyclerView.setAdapter(adapter);
+
+
 
         // Carga los datos
         loadPurchaseHistory();
 
+
+
+
         return view;
+
     }
 
     @Override
@@ -126,4 +136,19 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
             }
         }
     }
+
+    @Override
+    public void onDetailClick(PurchaseHistoryModel purchase) {
+        // Navegar a la actividad de detalle
+        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+
+        // Pasar datos clave (puedes pasar el ID y recuperar los demás en la siguiente actividad)
+        intent.putExtra("order_id", purchase.getDocumentId());
+        intent.putExtra("order_date", purchase.getDate());
+        intent.putExtra("order_total", purchase.getTotalAmount());
+        intent.putExtra("order_status", purchase.getSaleStatus());
+
+        startActivity(intent);
+    }
+
 }

@@ -21,6 +21,21 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     private List<PurchaseHistoryModel> purchaseList;
     private OnTrackOrderClickListener trackOrderClickListener;
 
+
+
+
+
+    private OnDetailClickListener detailClickListener;
+
+    // Nueva interfaz para el clic de detalle
+    // Interface para el click
+    public interface OnDetailClickListener {
+        void onDetailClick(PurchaseHistoryModel purchase);
+    }
+    // Método para asignar el listener
+    public void setOnDetailClickListener(OnDetailClickListener listener) {
+        this.detailClickListener = listener;
+    }
     public interface OnTrackOrderClickListener {
         void onTrackOrderClick(PurchaseHistoryModel purchase);
     }
@@ -99,8 +114,9 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
         // Nuevo listener para botón de Ver Detalle
         holder.viewDetailButton.setOnClickListener(v -> {
-            // (Puedes implementar esta funcionalidad después)
-            Toast.makeText(v.getContext(), "Ver detalles del pedido", Toast.LENGTH_SHORT).show();
+            if (detailClickListener != null) {
+                detailClickListener.onDetailClick(purchase);
+            }
         });
     }
 
@@ -113,6 +129,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         TextView dateText, totalText, itemsText, statusText;
         Button trackButton, viewDetailButton; // Nuevo campo
 
+        Button btnDetails;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             dateText = itemView.findViewById(R.id.order_date);
@@ -121,6 +138,8 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             statusText = itemView.findViewById(R.id.order_status);
             trackButton = itemView.findViewById(R.id.track_button);
             viewDetailButton = itemView.findViewById(R.id.view_detail_btn); // Referencia al nuevo botón
+
+
         }
     }
 }
