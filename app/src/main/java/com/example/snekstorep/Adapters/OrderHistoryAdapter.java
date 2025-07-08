@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -78,6 +79,29 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 trackOrderClickListener.onTrackOrderClick(purchase);
             }
         });
+
+        // Controlar visibilidad de botones según el estado
+        if ("Entregado".equalsIgnoreCase(purchase.getSaleStatus())) {
+            holder.trackButton.setVisibility(View.GONE);      // Ocultar Rastrear
+            holder.viewDetailButton.setVisibility(View.VISIBLE); // Mostrar Ver Detalle
+        } else {
+            holder.trackButton.setVisibility(View.VISIBLE);   // Mostrar Rastrear
+            holder.viewDetailButton.setVisibility(View.GONE);   // Ocultar Ver Detalle
+        }
+
+
+        // Listener para botón de rastreo (existente)
+        holder.trackButton.setOnClickListener(v -> {
+            if (trackOrderClickListener != null) {
+                trackOrderClickListener.onTrackOrderClick(purchase);
+            }
+        });
+
+        // Nuevo listener para botón de Ver Detalle
+        holder.viewDetailButton.setOnClickListener(v -> {
+            // (Puedes implementar esta funcionalidad después)
+            Toast.makeText(v.getContext(), "Ver detalles del pedido", Toast.LENGTH_SHORT).show();
+        });
     }
 
     @Override
@@ -87,7 +111,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView dateText, totalText, itemsText, statusText;
-        Button trackButton;
+        Button trackButton, viewDetailButton; // Nuevo campo
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -96,6 +120,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             itemsText = itemView.findViewById(R.id.order_items);
             statusText = itemView.findViewById(R.id.order_status);
             trackButton = itemView.findViewById(R.id.track_button);
+            viewDetailButton = itemView.findViewById(R.id.view_detail_btn); // Referencia al nuevo botón
         }
     }
 }

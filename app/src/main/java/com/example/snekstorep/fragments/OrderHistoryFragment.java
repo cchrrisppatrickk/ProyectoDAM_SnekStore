@@ -1,5 +1,7 @@
 package com.example.snekstorep.fragments;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -32,6 +34,8 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
     private RecyclerView recyclerView;
     private OrderHistoryAdapter adapter;
     private List<PurchaseHistoryModel> purchaseList = new ArrayList<>();
+
+    private static final int TRACK_ORDER_REQUEST_CODE = 1001; // Añade esta línea
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,7 +72,7 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
         Intent intent = new Intent(getActivity(), TrackOrderActivity.class);
         intent.putExtra("order_id", purchase.getDocumentId());
         intent.putExtra("current_status", purchase.getSaleStatus());
-        startActivity(intent);
+        startActivityForResult(intent, TRACK_ORDER_REQUEST_CODE);
     }
 
     private void loadPurchaseHistory() {
@@ -102,5 +106,24 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
 
     private void showEmptyState(boolean show) {
         // Implementa un TextView o ImageView para mostrar "No hay compras registradas"
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == TRACK_ORDER_REQUEST_CODE && resultCode == RESULT_OK) {
+            String updatedOrderId = data.getStringExtra("updated_order_id");
+
+            // Actualizar solo el pedido modificado
+            for (int i = 0; i < purchaseList.size(); i++) {
+                PurchaseHistoryModel order = purchaseList.get(i);
+                if (order.getDocumentId().equals(updatedOrderId)) {
+                    order.setSaleStatus("Entregado"); // Actualizar estado localmente
+                    adapter.notifyItemChanged(i); // Actualizar solo este ítem
+                    break;
+                }
+            }
+        }
     }
 }

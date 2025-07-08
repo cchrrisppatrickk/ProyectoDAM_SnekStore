@@ -61,18 +61,29 @@
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:layout_marginTop="8dp"
+            android:visibility="visible"
             android:textColor="@color/dark_gray"/>
 
         <!-- Agrega esto al final del LinearLayout, antes del cierre -->
+        <!-- Botón de Rastrear (visible inicialmente) -->
         <Button
             android:id="@+id/track_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="Rastrear Pedido"
             android:backgroundTint="@color/navy_blue"
+            android:textColor="@color/white"/>
+
+        <!-- Botón de Ver Detalle (oculto inicialmente) -->
+        <Button
+            android:id="@+id/view_detail_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ver Detalle"
+            android:backgroundTint="@color/green"
             android:textColor="@color/white"
-            android:layout_gravity="end"/>
+            android:visibility="gone"
+            android:layout_marginStart="8dp"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -91,11 +91,20 @@ public class TrackOrderActivity extends AppCompatActivity {
                                     // Devolver resultado a OrderHistoryFragment
                                     Intent resultIntent = new Intent();
                                     resultIntent.putExtra("updated_order_id", orderId);
+
+                                    // Añadir información adicional para optimizar la actualización
+                                    resultIntent.putExtra("new_status", "Entregado");
+                                    resultIntent.putExtra("position", -1); // Por si necesitas posición específica
+
                                     setResult(RESULT_OK, resultIntent);
                                     finish();
                                 });
                     } else {
                         Toast.makeText(this, "Error al actualizar estado", Toast.LENGTH_SHORT).show();
+
+                        // Notificar error
+                        setResult(RESULT_CANCELED);
+                        finish();
                     }
                 });
     }
