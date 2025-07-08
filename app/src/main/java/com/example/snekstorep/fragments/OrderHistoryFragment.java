@@ -58,6 +58,12 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        loadPurchaseHistory(); // Recargar datos cada vez que el fragment se vuelva visible
+    }
+
+    @Override
     public void onTrackOrderClick(PurchaseHistoryModel purchase) {
         Intent intent = new Intent(getActivity(), TrackOrderActivity.class);
         intent.putExtra("order_id", purchase.getDocumentId());

@@ -18,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.snekstorep.fragments.DeliveredOrdersFragment;
 import com.example.snekstorep.fragments.OrderHistoryFragment;
 import com.example.snekstorep.R;
 import com.example.snekstorep.fragments.HomeFragment;
@@ -95,9 +96,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.order_history) {
             loadFragment(new OrderHistoryFragment(), id);
             Toast.makeText(this, "Historial de pedidos", Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.delivered_orders) {
-
-
+//        } else if (id == R.id.delivered_orders) {
+//            loadFragment(new DeliveredOrdersFragment(), id);
+//            Toast.makeText(this, "Pedidos entregados", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.login) {
             startActivity(new Intent(this, LoginActivity.class));
         } else if (id == R.id.logout) {
